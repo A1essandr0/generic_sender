@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# vim
+*.swp
+
 # Distribution / packaging
 .Python
 build/
@@ -127,3 +130,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# infrastructure
+infrastructure/kafka-data/*
+infrastructure/keydb-data/*
+infrastructure/zk-data/*
+infrastructure/zk-txn-logs/*

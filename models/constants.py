@@ -1,0 +1,7 @@
+EVENT_NAME_FILLED_OUT_FORM = "filledOutForm"
+EVENT_NAME_APPROVED = "approvedEvent"
+EVENT_NAME_UNIQUE_EVENT = "uniqueEvent"
+EVENT_NAME_UNIQUE_LOAN = "uniqueLoan"
+
+EVENT_STATUS_APPROVED = "approved"
+EVENT_STATUS_PENDING = "pending"

@@ -1,0 +1,27 @@
+LOGGING_LEVEL: "INFO"
+LOGGING_FORMAT: "%(asctime)-15s | %(levelname)s | %(filename)s | %(lineno)d: %(message)s"
+
+WEB_HOST: "0.0.0.0"
+WEB_PORT: 8002
+
+KAFKA_BROKER: "localhost:9093"
+PASSED_REQUESTS_TOPIC: "passed-requests"
+PROCESSED_REQUESTS_TOPIC: "processed-requests"
+
+PROMETHEUS_PORT: 7002
+
+DEFAULT_S2S_KEY: "default_s2s_key"
+MYTRACKER_URL: "https://tracker-s2s.my.com/v1/customEvent/"
+
+APPMETRICA_URL: "https://api.appmetrica.yandex.ru/logs/v1/import/events"
+
+APPSFLYER_URL: "https://api2.appsflyer.com/inappevent"
+
+KEYDB_HOST: "127.0.0.1"
+KEYDB_PORT: 6379
+KEYDB_DB_NUM: 0
+KEYDB_PASS: "1qaz@WSX"
+
+# Available only in config
+UNIQUE_LOAN_PARTNERS: ["leads"]
+
