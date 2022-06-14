@@ -4,5 +4,4 @@ configloader==1.0.1
 faust-streaming[rocksdb, fast, uvloop]
 prometheus-client===0.11.0
 PyYAML==5.4.1
-asyncpg==0.24.0
 aioredis==2.0.1
