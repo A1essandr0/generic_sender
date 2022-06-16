@@ -7,8 +7,8 @@ from prometheus_client import start_http_server
 from pydantic_serializer import PydanticSerializer
 import libs.config_loader as config_loader
 from libs.logger_colorer import colored_stream
-from models.raw_request import RawRequest
-from models.conversion import Conversion
+from models.raw_event import RawEvent
+from models.processed_event import ProcessedEvent
 
 from libs.sender import Sender
 import libs.metrics as counters
@@ -35,39 +35,34 @@ app = faust.App(
 )
 
 
-# Data comes from this topic to be processed
-passed_requests_topic = app.topic(
-    config.get(config_loader.PASSED_REQUESTS_TOPIC), partitions=8, value_serializer=PydanticSerializer(RawRequest)
+raw_events_topic = app.topic(
+    config.get(config_loader.RAW_EVENTS_TOPIC), partitions=8, value_serializer=PydanticSerializer(RawEvent)
 )
-# After processing data goes to this topic
-processed_requests_topic = app.topic(
-    config.get(config_loader.PROCESSED_REQUESTS_TOPIC), partitions=8, value_serializer=PydanticSerializer(Conversion)
+processed_events_topic = app.topic(
+    config.get(config_loader.PROCESSED_EVENTS_TOPIC), partitions=8, value_serializer=PydanticSerializer(ProcessedEvent)
 )
 
 
 sender = Sender(
-    # implementation of sending event to outer system
-    sender_implementation=sender_impl.send_event_appsflyer,
-
-    topic=processed_requests_topic,
-
+    sender_implementation=sender_impl.mock_send_event, # implementation of sending event to outer system
+    topic=processed_events_topic,
     data_fields={"status": "generic_status", "response": "generic_rsp"},
     metrics={"instance_name": "generic_sender"},
-
-    # mappings are data used in processing
-    mappings_dict=mappings_dict,
+    mappings_dict=mappings_dict, # mappings are data used in processing
 )
 
 sender.register_processors([
+    processors.mock_processor,
     processors.make_conversion,
     processors.add_app_id,
 ])
 
 sender.register_event_senders([
+    event_senders.mock_event_sender,
     event_senders.process_filled_out_form_event,
-    event_senders.process_approved_event,
-    event_senders.process_unique_event,
-    event_senders.process_unique_loan_event,
+    # event_senders.process_approved_event,
+    # event_senders.process_unique_event,
+    # event_senders.process_unique_loan_event,
 ])
 
 asyncio.ensure_future(sender.initialize_mappings())
@@ -79,21 +74,22 @@ async def on_started() -> None:
     start_http_server(port=config.get(config_loader.PROMETHEUS_PORT))
 
 
-@app.agent(passed_requests_topic)
+@app.agent(raw_events_topic)
 async def on_event(stream) -> None:
-    async for msg_key, raw_request in stream.items():
-        counters.RAW_REQUESTS_READ_CNTR.labels(sender.metrics["instance_name"]).inc()
+    async for msg_key, raw_event in stream.items():
+        counters.RAW_EVENTS_READ_CNTR.labels(sender.metrics["instance_name"]).inc()
 
-        processed_request = await sender.process(raw_request)
-        if not processed_request.app_id:
-            logger.error(f"Unknown source: {processed_request.source}")
-            logger.error(F"All params: {processed_request.dict()}")
+        processed_event = await sender.process(raw_event)
+
+        if not processed_event.app_id:
+            logger.error(f"Unknown source: {processed_event.source}")
+            logger.error(F"All params: {processed_event.dict()}")
             counters.UNKNOWN_SOURCE_CNTR.labels(sender.metrics["instance_name"]).inc()
-            yield processed_request
+            yield processed_event
         
         await sender.send_events(
-            processed_request, 
+            processed_event, 
             msg_key=msg_key
         )
 
-        yield processed_request
+        yield processed_event

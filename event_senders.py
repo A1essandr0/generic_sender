@@ -17,6 +17,10 @@ logger = logging.getLogger(__name__)
 
 
 # function-based events
+async def mock_event_sender(data, msg_key, topic, sender_impl, data_fields, metrics, mappings):
+    pass
+
+
 async def process_filled_out_form_event(data, msg_key, topic, sender_impl, data_fields, metrics, mappings):
     data.event_name = models.constants.EVENT_NAME_FILLED_OUT_FORM
     app_type = "android" if data.app_id not in mappings[constants.CONFIG_KEY_IOS_APPS] else "ios"
@@ -41,6 +45,11 @@ async def process_filled_out_form_event(data, msg_key, topic, sender_impl, data_
 
     logger.info(f"sending filled out form event to topic: {data}")
     await topic.send(key=msg_key, value=data)
+
+
+async def process_status_based_event(data, msg_key, topic, sender_impl, data_fields, metrics, mappings):
+    logger.warn(f"Status-based event: {data.event_name=} {data.status=}")
+
 
 
 async def process_approved_event(data, msg_key, topic, sender_impl, data_fields, metrics, mappings):
@@ -127,7 +136,3 @@ async def process_unique_loan_event(data, msg_key, topic, sender_impl, data_fiel
         
         logger.info(f"sending unique loan event to topic: {data}")
         await topic.send(key=msg_key, value=data)
-
-
-async def process_status_based_event(data, msg_key, topic, sender_impl, data_fields, metrics, mappings):
-    logger.warn(f"Status-based event: {data.event_name=} {data.status=}")

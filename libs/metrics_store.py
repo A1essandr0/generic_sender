@@ -1,5 +1,7 @@
 import logging
+
 from libs.singleton import MetaSingleton
+
 logger = logging.getLogger(__name__)
 
 

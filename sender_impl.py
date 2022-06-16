@@ -17,6 +17,13 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+async def mock_send_event(data, mappings, metrics):
+    logger.info(f"SENT: {data=}")
+
+    return 200, "OK"
+
+
+
 async def send_event_appmetrica(data, mappings, metrics):
     appmetrica_app_id = mappings[constants.CONFIG_KEY_APPMETRICA_APP_MAPPING].get(data.source, None)
     app_api_key = mappings[constants.CONFIG_KEY_APPMETRICA_APP_API_KEY_MAPPING].get(data.source, None)

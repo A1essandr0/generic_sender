@@ -5,8 +5,8 @@ WEB_HOST: "0.0.0.0"
 WEB_PORT: 8002
 
 KAFKA_BROKER: "localhost:9093"
-PASSED_REQUESTS_TOPIC: "passed-requests"
-PROCESSED_REQUESTS_TOPIC: "processed-requests"
+RAW_EVENTS_TOPIC: "raw-events"
+PROCESSED_EVENTS_TOPIC: "processed-events"
 
 PROMETHEUS_PORT: 7002
 
