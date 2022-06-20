@@ -13,6 +13,10 @@ CONFIG_KEY_APPSFLYER_APP_MAPPING = "appsflyer_app_id_mapping"
 CONFIG_KEY_APPSFLYER_ID_MAPPING = "appsflyer_id_mapping"
 CONFIG_KEY_APPSFLYER_DEV_KEY_MAPPING = "appsflyer_dev_key_mapping"
 
+ANDROID_OS_NAME = "Android"
+IOS_OS_NAME = "IOS"
+HUAWEI_OS_NAME = "Huawei"
+
 
 mappings = {
     "appsflyer_app_id_mapping": CONFIG_KEY_APPSFLYER_APP_MAPPING,

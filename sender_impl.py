@@ -18,8 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 async def mock_send_event(data, mappings, metrics):
-    logger.info(f"SENT: {data=}")
-
     return 200, "OK"
 
 

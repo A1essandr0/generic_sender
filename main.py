@@ -46,7 +46,7 @@ processed_events_topic = app.topic(
 sender = Sender(
     sender_implementation=sender_impl.mock_send_event, # implementation of sending event to outer system
     topic=processed_events_topic,
-    data_fields={"status": "generic_status", "response": "generic_rsp"},
+    data_fields={"status": "appsflyer_status", "response": "appsflyer_rsp"},
     metrics={"instance_name": "generic_sender"},
     mappings_dict=mappings_dict, # mappings are data used in processing
 )
@@ -55,14 +55,12 @@ sender.register_processors([
     processors.mock_processor,
     processors.make_conversion,
     processors.add_app_id,
+    processors.add_os_parameter
 ])
 
 sender.register_event_senders([
     event_senders.mock_event_sender,
     event_senders.process_filled_out_form_event,
-    # event_senders.process_approved_event,
-    # event_senders.process_unique_event,
-    # event_senders.process_unique_loan_event,
 ])
 
 asyncio.ensure_future(sender.initialize_mappings())

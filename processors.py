@@ -11,13 +11,10 @@ async def mock_processor(data, mappings):
 async def make_conversion(data, mappings):
     processed_event = ProcessedEvent(**data.dict())
     processed_event.event_value = ""
+    processed_event.os_name = ""
     processed_event.process_date = datetime.datetime.utcnow().isoformat()
     processed_event.process_time = int(time.time())
     
-    # processed_event.instance_id = data.aff_sub1
-    # processed_event.advertising_id = ""
-    # processed_event.af_events_api = "true"
-
     return processed_event
 
 
@@ -27,8 +24,14 @@ async def add_app_id(data, mappings):
     return data
 
 
-async def add_appmetrica_profile_id(data, mappings):
-    aff_sub1_split = data.aff_sub1.split("_")
-    if len(aff_sub1_split) == 2:
-        data.appmetrica_profile_id = aff_sub1_split[1]
+async def add_os_parameter(data, mappings):
+    android_applications, ios_applications = (
+        mappings[constants.CONFIG_KEY_NO_ANDROID_ID],
+        mappings[constants.CONFIG_KEY_IOS_APPS],
+    )
+    if data.source in android_applications:
+        data.os_name = constants.ANDROID_OS_NAME
+    elif data.source in ios_applications:
+        data.os_name = constants.IOS_OS_NAME
+
     return data
