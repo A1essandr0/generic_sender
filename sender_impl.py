@@ -17,9 +17,17 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-async def mock_send_event(data, mappings, metrics):
+async def mock_send_event_mytracker(data, mappings, metrics):
+    logger.info(f"Mytracker sender sends its regards")
     return 200, "OK"
 
+async def mock_send_event_appsflyer(data, mappings, metrics):
+    logger.info(f"Appsflyer sender sends its regards")
+    return 200, "OK"
+
+async def mock_send_event_appmetrica(data, mappings, metrics):
+    logger.info(f"Appmetrica sender its regards")
+    return 200, "OK"
 
 
 async def send_event_appmetrica(data, mappings, metrics):

@@ -6,6 +6,8 @@ import libs.constants as constants
 import libs.config_loader as config_loader
 from libs.logger_colorer import colored_stream
 
+from libs.event import Event
+
 
 config = config_loader.Config()
 logging.basicConfig(
@@ -25,7 +27,7 @@ async def mock_event_sender(data, msg_key, topic, sender_impl, data_fields, metr
     if data_fields and "response" in data_fields:
         setattr(data, data_fields["response"], response_value)
 
-    logger.warn(f"Sending MOCK event: {data=} to {topic=}")
+    logger.warn(f"MOCK sending event: {data=} to {topic=}")
     await topic.send(key=msg_key, value=data)
 
 
@@ -53,6 +55,6 @@ async def process_filled_out_form_event(data, msg_key, topic, sender_impl, data_
         await topic.send(key=msg_key, value=data)
 
 
-
-class SendingEvent:
+# class-based events
+class MockEvent(Event):
     pass
